@@ -2,7 +2,7 @@
 
 本项目是 93@Home 的 DashBoard 基于 Vue + Element-plus
 
-> 值得一提，受限于本人技术水平，本项目中~~大~~部分代码使用 AI 编写
+> 值得一提，受限于本人技术水平，本项目中~~大部分~~代码使用 AI 编写
 
 ## Recommended IDE Setup
 
