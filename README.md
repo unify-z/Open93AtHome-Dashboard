@@ -1,6 +1,8 @@
 # dash-v3
 
-This template should help get you started developing with Vue 3 in Vite.
+本项目是 93@Home 的 DashBoard 基于 Vue + Element-plus
+
+> 值得一提，受限于本人技术水平，本项目中~~一部分~~代码使用 AI 编写
 
 ## Recommended IDE Setup
 
