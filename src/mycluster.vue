@@ -7,7 +7,8 @@
 <script setup>
 import { onMounted } from 'vue';
 import { ElMessageBox } from 'element-plus';
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 function getCookie(name) {
   let cookieArr = document.cookie.split(';');
   
@@ -29,7 +30,7 @@ function checkTokenInCookie() {
     ElMessageBox.alert('用户未登录','提示', {
     confirmButtonText: '去登录',
     callback: () => {
-      window.location.href = '/auth/login';
+      router.push('/auth/login');
     },
   });
   }
