@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { ElTable, ElTableColumn } from 'element-plus';
+import { ElTable, ElTableColumn,ElMessage } from 'element-plus';
 import axios from 'axios';
 function formatCommas(num) {
   return num.toLocaleString();
