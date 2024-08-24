@@ -1,21 +1,16 @@
+import homepage from './homepage.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '..homepage.vue'
-
-
+import Rank from './rank.vue' 
+import Login from './login.vue'
+import mycluster from './mycluster.vue'
+const routes = [
+  { path: '/', component: homepage},
+  { path: '/rank', component: Rank},
+  { path: '/auth/login', component: Login} ,
+  { path: '/my/clusters', component: mycluster}
+]
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/:pathMatch(.*)*', 
-      name: 'not-found',
-      component: () => import('../homapage.vue') 
-    }
-  ]
+  history: createWebHistory(),
+  routes,
 })
-
 export default router
