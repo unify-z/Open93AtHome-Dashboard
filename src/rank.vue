@@ -84,6 +84,10 @@ async function fetchData() {
     });
   } catch (error) {
     console.error('Failed to fetch data:', error);
+    ElMessage({
+      message: '拉取数据失败：'+ error,
+      type: 'error'
+  });
   }
 }
 

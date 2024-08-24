@@ -26,6 +26,7 @@ import axios from 'axios';
 import * as echarts from 'echarts';
 import {useDark, useToggle} from '@vueuse/core';
 const isDarkMode = useDark();
+import {ElMessage} from 'element-plus';
 const hitsChart = ref(null);
 const bytesChart = ref(null);
 
@@ -64,6 +65,10 @@ const fetchData = async () => {
     initBytesChart(data.dailyBytes);
   } catch (error) {
     console.error('Failed to fetch data:', error);
+    ElMessage({
+      message: '拉取数据失败：'+ error,
+      type: 'error'
+  });
   }
 };
 
