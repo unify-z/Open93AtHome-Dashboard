@@ -73,7 +73,7 @@ export default {
 
     const callback = async (code) => {
       try {
-        const Url = `/93AtHome/dashboard/user/oauth`;
+        const Url = `https://saltwood.top:9393/93AtHome/dashboard/user/oauth`;
         const response = await axios.get(Url, {
           params: {
             code: code,

@@ -15,36 +15,63 @@
       <el-menu-item index="3" @click="navigateTo('/my/clusters')">我的节点</el-menu-item>
       <el-menu-item>
           <el-button @click="switchThemes()">
-            <el-icon><moon/></el-icon>
+            <el-icon><Moon/></el-icon>
           </el-button>
       </el-menu-item>
       <el-menu-item>
-          <el-button @click="navigateTo('/auth/login')" type="primary">登录</el-button>
-        </el-menu-item>
-
+        <el-button v-if="!isTokenPresent()" @click="navigateTo('/auth/login')" type="primary">登录</el-button>
+        <div v-else>
+          <img :src="userInfo.avatar_url" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
+          <span>{{ userInfo.login }}</span>
+        </div>
+      </el-menu-item>
     </el-menu>
     <router-view v-wechat-title="$route.meta.title"></router-view>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { Moon } from '@element-plus/icons-vue'
 import {ElementPlus,ElMessage} from 'element-plus'
 import { useRouter } from 'vue-router'
 import { ref, onMounted  } from 'vue'
-const activeIndex = ref('1')
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import {useDark, useToggle} from '@vueuse/core'
+import axios from 'axios'
+import Cookies from 'js-cookie'
+
+const activeIndex = ref('1')
 const router = useRouter()
 
 const navigateTo = (path: string) => {
   router.push(path)
 }
 
+const isTokenPresent = (): boolean => {
+  const token = Cookies.get('token');
+  return !!token; 
+}
+
+const userInfo = ref({
+  avatar_url: '',
+  login: ''
+})
+
+const getuserinfo = async () => {
+  try {
+    const response = await axios.get('/93AtHome/dashboard/user/profile', {
+      withCredentials: true,
+    });
+    userInfo.value = response.data;
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+  }
+};
+
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
+
 const toggledarkmode = useToggle(useDark())
 const isDarkMode = useDark()
 const switchThemes = () => {
@@ -53,21 +80,24 @@ const switchThemes = () => {
     ElMessage({
       message: '已切换为浅色模式',
       type: 'success'
-  });
+    });
   } else if (!isDarkMode.value) {
-      ElMessage({
-        message: '已切换为深色模式',
-        type: 'success'
-      });
-}
+    ElMessage({
+      message: '已切换为深色模式',
+      type: 'success'
+    });
+  }
   toggledarkmode()
 }
 
+onMounted(() => {
+  if (isTokenPresent()) {
+    getuserinfo();
+  }
+})
 </script>
 
-
 <style>
-
 .layout-container {
   display: flex;
   flex-direction: column;
