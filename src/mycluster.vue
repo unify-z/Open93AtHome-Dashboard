@@ -1,8 +1,9 @@
 <template>
   <div>
+  <el-button type="primary" @click="bindCluster" class="bind-button">绑定节点</el-button>
     <el-row :gutter="20">
       <el-col :span="8" v-for="cluster in clusters" :key="cluster.clusterId">
-        <el-card>
+        <el-card class="card">
           <div class="card-title font-weight-black white-text">
             {{ cluster.clusterName }}
           </div>
@@ -66,6 +67,28 @@ async function fetchClusters() {
   }
 }
 
+async function bindCluster() {
+  try {
+    const { value } = await ElMessageBox.prompt('请输入你的ClusterId和ClusterSecret', '绑定节点', {
+      confirmButtonText: '绑定',
+      cancelButtonText: '取消',
+      inputPattern: /^.+$/,
+      inputErrorMessage: '输入不能为空',
+      inputPlaceholder: 'ClusterId,ClusterSecret',
+    });
+
+    const [clusterId, clusterSecret] = value.split(',');
+
+    await axios.get('https://saltwood.top:9393/93AtHome/dashboard/user/bindCluster?clusterId='+clusterId+'&clusterSecret='+clusterSecret);
+
+    ElMessage.success('节点绑定成功');
+    fetchClusters(); 
+  } catch (error) {
+    ElMessage.error('节点绑定失败:'+error);
+    console.error(error);
+  }
+}
+
 onMounted(() => {
   main();
 });
@@ -74,12 +97,18 @@ onMounted(() => {
 <style scoped>
 .card-title {
   font-weight: bold;
-  background-color: red;
   color: white;
   padding: 16px;
 }
-
+.card{
+  margin-top: 10px;
+  margin-left: 10px;
+}
 .card-text {
   padding: 16px;
+}
+.bind-button {
+  margin-top: 20px;
+  margin-left: 10px
 }
 </style>

@@ -36,41 +36,42 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { ElMessage } from 'element-plus';
+
 export default {
-  name: 'login',
-  data() {
-    return {
-      loading: false,
-      success: false,
-      failure: false,
+  name: 'Login',
+  setup() {
+    const loading = ref(false);
+    const success = ref(false);
+    const failure = ref(false);
+    const username = ref('');
+    const failurerea = ref('');
+
+    const goBack = () => {
+      window.history.back();
     };
-  },
-  created() {
-    if (this.$route.query.code) {
-      this.loading = true;
-      this.callback(this.$route.query.code).finally(() => {
-        this.loading = false;
-      });
-    }
-  },
-  methods: {
-    goBack() {
-      this.$router.go(-1);
-    },
-    async getcode() {
+
+    const redirectToHome = () => {
+      window.location.href = '/';
+    };
+
+    const getcode = async () => {
       try {
-        this.loading = true;
+        loading.value = true;
         const response = await axios.get('https://saltwood.top:9393/93AtHome/dashboard/oauth_id');
         const redirect_uri = window.location.href;
         const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${response.data}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
         window.location.href = redirectUrl;
       } catch (error) {
-        this.loading = false;
+        loading.value = false;
         console.error("Failed to get client_id:", error);
       }
-    },
-    async callback(code) {
+    };
+
+    const callback = async (code) => {
       try {
         const Url = `/93AtHome/dashboard/user/oauth`;
         const response = await axios.get(Url, {
@@ -80,20 +81,66 @@ export default {
         });
 
         if (response.status === 200) {
-          this.success = true;
-          this.loading = false;
+          success.value = true;
+          username.value = response.data.username;
+          setTimeout(() => {
+            redirectToHome();
+          }, 3000);
         } else {
-          this.failure = true;
-          console.log(response.data);
+          failure.value = true;
           console.log("Login failed with status:", response.status);
-          this.loading = false;
+          failurerea.value = response.data.error;
         }
       } catch (error) {
-        this.failure = true;
-        console.error("Login failed:", error);
-        this.loading = false;
+        failure.value = true;
+        if (error.response && error.response.status === 500) {
+          failurerea.value = error.response.data.error;
+        } else {
+          console.error("Login failed:", error);
+          failurerea.value = error;
+        }
+      } finally {
+        loading.value = false;
       }
-    },
+    };
+
+    onMounted(() => {
+      if (Cookies.get('token')) {
+        redirectToHome();
+      } else if (new URLSearchParams(window.location.search).get('code')) {
+        loading.value = true;
+        callback(new URLSearchParams(window.location.search).get('code')).finally(() => {
+          loading.value = false;
+        });
+      }
+    });
+
+    return {
+      loading,
+      success,
+      failure,
+      username,
+      failurerea,
+      goBack,
+      getcode,
+      callback,
+      redirectToHome,
+    };
   },
 };
 </script>
+
+<style scoped>
+.el-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.btn-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+</style>
