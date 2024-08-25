@@ -69,7 +69,7 @@ async function fetchClusters() {
 
 async function bindCluster() {
   try {
-    const { value } = await ElMessageBox.prompt('请输入你的ClusterId和ClusterSecret', '绑定节点', {
+    const { value } = await ElMessageBox.prompt('请输入你的ClusterId和Secret', '绑定节点', {
       confirmButtonText: '绑定',
       cancelButtonText: '取消',
       inputPattern: /^.+$/,
@@ -79,7 +79,12 @@ async function bindCluster() {
 
     const [clusterId, clusterSecret] = value.split(',');
 
-    await axios.get('https://saltwood.top:9393/93AtHome/dashboard/user/bindCluster?clusterId='+clusterId+'&clusterSecret='+clusterSecret);
+    await axios.post('https://saltwood.top:9393/93AtHome/dashboard/user/bindCluster', {
+        clusterId: clusterId,
+        clusterSecret: clusterSecret,
+      }, {
+        withCredentials: true,
+      });
 
     ElMessage.success('节点绑定成功');
     fetchClusters(); 
