@@ -74,6 +74,7 @@ export default {
     const callback = async (code) => {
       try {
         const Url = `https://saltwood.top:9393/93AtHome/dashboard/user/oauth`;
+        ElMessage("正在登录，别急");
         const response = await axios.get(Url, {
           params: {
             code: code,

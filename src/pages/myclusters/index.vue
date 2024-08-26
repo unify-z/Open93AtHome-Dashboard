@@ -7,6 +7,8 @@
           <div class="card-title font-weight-black">
             <div :class="isOnline(cluster) ? 'white-text green-bg' : 'white-text red-bg'">
               {{ cluster.clusterName }}
+              <el-icon style="margin-left: auto;"><InfoFilled /></el-icon>
+              <el-icon style="margin-left: auto;" @click="editcluster(cluster.clusterId)"><Setting /></el-icon>
             </div>
           </div>
           <el-divider></el-divider>
@@ -43,7 +45,69 @@ function getCookie(name) {
   
   return null;
 }
+async function editcluster(Id){
+  const url = "https://saltwood.top:9393/93AtHome/dashboard/user/cluster/profile?clusterId="+Id;
+  const inputs = {
+    nodeName: ref(''),
+    bandwidth: ref(''),
+    sponsorName: ref(''),
+    sponsorAddress: ref(''),
+  };
 
+  ElMessageBox({
+    title: '修改节点信息',
+    message: h('div', {}, [
+      h('div', { class: 'custom-input' }, [
+        h('span', {}, '节点名称'),
+        h('el-input', {
+          modelValue: inputs.nodeName.value,
+          'onUpdate:modelValue': (value) => inputs.nodeName.value = value,
+          placeholder: '输入节点名称',
+        }),
+      ]),
+      h('div', { class: 'custom-input' }, [
+        h('span', {}, '带宽:'),
+        h('el-input', {
+          modelValue: inputs.bandwidth.value,
+          'onUpdate:modelValue': (value) => inputs.bandwidth.value = value,
+          placeholder: '输入节点带宽',
+        }),
+      ]),
+      h('div', { class: 'custom-input' }, [
+        h('span', {}, '赞助商:'),
+        h('el-input', {
+          modelValue: inputs.sponsorName.value,
+          'onUpdate:modelValue': (value) => inputs.sponsorName.value = value,
+          placeholder: '输入赞助商',
+        }),
+      ]),
+      h('div', { class: 'custom-input' }, [
+        h('span', {}, 'SponsorUrl:'),
+        h('el-input', {
+          modelValue: inputs.sponsorurl.value,
+          'onUpdate:modelValue': (value) => inputs.sponsorurl.value = value,
+          placeholder: '输入赞助商链接',
+        }),
+      ]),
+    ]),
+    confirmButtonText: '提交',
+    cancelButtonText: '取消',
+    beforeClose: async (action, instance, done) => {
+      if (action === 'confirm') {
+        json_data = {
+          clusterName: inputs.nodeName.value,
+          bandwidth: inputs.bandwidth.value,
+          sponsor: inputs.sponsorName.value,
+          sponsorUrl: inputs.sponsorurl.value,
+        };
+        await axios.post(url, json_data, {
+          withCredentials: true,
+        });
+      }
+      done();
+    },
+  });
+};
 function main() {
   const token = getCookie('token');
   if (token) {
