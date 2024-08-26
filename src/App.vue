@@ -10,19 +10,19 @@
       <el-menu-item index="0">
         <el-text class="mx-1" type="primary">93@Home-Dash</el-text>
       </el-menu-item>
-      <el-menu-item index="1" @click="navigateTo('/')">主页</el-menu-item>
-      <el-menu-item index="2" @click="navigateTo('/rank')">排行榜</el-menu-item> 
-      <el-menu-item index="3" @click="navigateTo('/my/clusters')">我的节点</el-menu-item>
+      <el-menu-item index="1" @click="router.push('/')">主页</el-menu-item>
+      <el-menu-item index="2" @click="router.push('/rank')">排行榜</el-menu-item> 
+      <el-menu-item index="3" @click="router.push('/myclusters')">我的节点</el-menu-item>
       <el-menu-item>
           <el-button @click="switchThemes()">
             <el-icon><Moon/></el-icon>
           </el-button>
       </el-menu-item>
       <el-menu-item>
-        <el-button v-if="!isTokenPresent()" @click="navigateTo('/auth/login')" type="primary">登录</el-button>
+        <el-button v-if="!isTokenPresent()" @click="router.push('/auth/login')" type="primary">登录</el-button>
         <div v-else>
           <img :src="userInfo.avatar_url" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
-          <span>{{ userInfo.login }}</span>
+            <span>{{ userInfo.login }}</span>
         </div>
       </el-menu-item>
     </el-menu>
@@ -32,7 +32,7 @@
 
 <script lang="ts" setup>
 import { Moon } from '@element-plus/icons-vue'
-import {ElementPlus,ElMessage} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import { useRouter } from 'vue-router'
 import { ref, onMounted  } from 'vue'
 import 'element-plus/theme-chalk/dark/css-vars.css'
@@ -42,10 +42,6 @@ import Cookies from 'js-cookie'
 
 const activeIndex = ref('1')
 const router = useRouter()
-
-const navigateTo = (path: string) => {
-  router.push(path)
-}
 
 const isTokenPresent = (): boolean => {
   const token = Cookies.get('token');
@@ -59,7 +55,7 @@ const userInfo = ref({
 
 const getuserinfo = async () => {
   try {
-    const response = await axios.get('/93AtHome/dashboard/user/profile', {
+    const response = await axios.get('http://saltwood.top:9393/93AtHome/dashboard/user/profile', {
       withCredentials: true,
     });
     userInfo.value = response.data;

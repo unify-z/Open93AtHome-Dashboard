@@ -1,8 +1,20 @@
 {
+  "include": [
+    "./unplugin-vue-router.d.ts"
+  ],
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["unplugin-vue-router/client"],
+    "target": "ES5", 
+    "lib": ["ES2015", "DOM"], 
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": ["node_modules", "dist"]
 }
