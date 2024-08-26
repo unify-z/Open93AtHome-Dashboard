@@ -1,16 +1,18 @@
 <template>
   <div>
-  <el-button type="primary" @click="bindCluster" class="bind-button">绑定节点</el-button>
+    <el-button type="primary" @click="bindCluster" class="bind-button">绑定节点</el-button>
     <el-row :gutter="20">
       <el-col :span="8" v-for="cluster in clusters" :key="cluster.clusterId">
-        <el-card class="card">
+        <el-card :class="{'card-online': isOnline(cluster), 'card-offline': !isOnline(cluster)}">
           <div class="card-title font-weight-black white-text">
             {{ cluster.clusterName }}
           </div>
           <el-divider></el-divider>
           <div class="card-text">
-            <p>clusterId:{{ cluster.clusterId }}</p>
-            <p>EndPoint:{{ cluster.endPoint }}</p>
+            <p>ID: {{ cluster.clusterId }}</p>
+            <p>EndPoint: {{ cluster.endPoint }}</p>
+            <p>上传速率: {{ cluster.bandwidth }}</p>
+            <p>创建日期: {{ cluster.createdAt }}</p>
           </div>
         </el-card>
       </el-col>
@@ -89,9 +91,14 @@ async function bindCluster() {
     ElMessage.success('节点绑定成功');
     fetchClusters(); 
   } catch (error) {
-    ElMessage.error('节点绑定失败:'+error);
+    ElMessage.error('节点绑定失败: ' + error);
     console.error(error);
   }
+}
+
+function isOnline(cluster) {
+
+  return cluster.isOnline === 'online'; 
 }
 
 onMounted(() => {
@@ -105,7 +112,7 @@ onMounted(() => {
   color: white;
   padding: 16px;
 }
-.card{
+.card {
   margin-top: 10px;
   margin-left: 10px;
 }
@@ -114,6 +121,14 @@ onMounted(() => {
 }
 .bind-button {
   margin-top: 20px;
-  margin-left: 10px
+  margin-left: 10px;
+}
+
+.card-online {
+  background-color: #00cc66; 
+}
+
+.card-offline {
+  background-color: #ff6666;
 }
 </style>
