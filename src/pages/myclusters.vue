@@ -3,9 +3,11 @@
     <el-button type="primary" @click="bindCluster" class="bind-button">绑定节点</el-button>
     <el-row :gutter="20">
       <el-col :span="8" v-for="cluster in clusters" :key="cluster.clusterId">
-        <el-card :class="{'card-online': isOnline(cluster), 'card-offline': !isOnline(cluster)}">
-          <div class="card-title font-weight-black white-text">
-            {{ cluster.clusterName }}
+        <el-card class="card">
+          <div class="card-title font-weight-black">
+            <div :class="isOnline(cluster) ? 'white-text green-bg' : 'white-text red-bg'">
+              {{ cluster.clusterName }}
+            </div>
           </div>
           <el-divider></el-divider>
           <div class="card-text">
@@ -113,7 +115,7 @@ onMounted(() => {
   padding: 16px;
 }
 .card {
-  margin-top: 10px;
+  margin-top: 15px;
   margin-left: 10px;
 }
 .card-text {
@@ -123,12 +125,10 @@ onMounted(() => {
   margin-top: 20px;
   margin-left: 10px;
 }
-
-.card-online {
-  background-color: #00cc66; 
+.green-bg{
+  background-color: #67C23A;
 }
-
-.card-offline {
-  background-color: #ff6666;
+.red-bg{
+  background-color: #F56C6C;
 }
 </style>

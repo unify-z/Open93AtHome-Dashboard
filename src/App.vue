@@ -55,12 +55,12 @@ const userInfo = ref({
 
 const getuserinfo = async () => {
   try {
-    const response = await axios.get('http://saltwood.top:9393/93AtHome/dashboard/user/profile', {
+    const response = await axios.get('https://saltwood.top:9393/93AtHome/dashboard/user/profile', {
       withCredentials: true,
     });
     userInfo.value = response.data;
   } catch (error) {
-    console.error('Error fetching user info:', error);
+    console.error('Error:', error);
   }
 };
 
