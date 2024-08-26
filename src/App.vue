@@ -20,9 +20,9 @@
       </el-menu-item>
       <el-menu-item>
         <el-button v-if="!isTokenPresent()" @click="router.push('/auth/login')" type="primary">登录</el-button>
-        <div v-else>
+        <div v-else style="display: flex; align-items: center;">
           <img :src="userInfo.avatar_url" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
-            <span>{{ userInfo.login }}</span>
+          <span style="margin-left: 8px;">{{ userInfo.login }}</span>
         </div>
       </el-menu-item>
     </el-menu>
