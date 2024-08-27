@@ -10,9 +10,9 @@
       <el-menu-item index="0">
         <el-text class="mx-1" type="primary">93@Home-Dash</el-text>
       </el-menu-item>
-      <el-menu-item index="1" @click="router.push('/')">主页</el-menu-item>
-      <el-menu-item index="2" @click="router.push('/rank')">排行榜</el-menu-item> 
-      <el-menu-item index="3" @click="router.push('/myclusters')">我的节点</el-menu-item>
+      <el-menu-item index="1" @click="router.push('/dashboard')">主页</el-menu-item>
+      <el-menu-item index="2" @click="router.push('/dashboard/rank')">排行榜</el-menu-item> 
+      <el-menu-item index="3" @click="router.push('/dashboard/myclusters')">我的节点</el-menu-item>
       <el-menu-item>
           <el-button @click="switchThemes()">
             <el-icon><Moon/></el-icon>

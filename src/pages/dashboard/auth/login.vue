@@ -55,7 +55,7 @@ export default {
     };
 
     const redirectToHome = () => {
-      window.location.href = '/';
+      window.location.href = '/dashboard';
     };
 
     const getcode = async () => {
