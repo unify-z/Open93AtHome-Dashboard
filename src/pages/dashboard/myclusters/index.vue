@@ -32,16 +32,20 @@
           </div>
           <div class="card-button">
             <el-button @click="showcluster(cluster.clusterId)">
-              <el-icon style="margin-left: auto;">
+              <el-icon>
                 <InfoFilled />
               </el-icon>
               查看节点详细
             </el-button>
             <el-button @click="showEditDialog(cluster.clusterId)">
-              <el-icon style="margin-left: auto;">
+              <el-icon>
                 <Setting />
               </el-icon>
               修改节点信息
+            </el-button>
+            <el-button type="danger" @click="unbindcluster(cluster.clusterId)">
+              <el-icon><Delete /></el-icon>
+              解绑节点
             </el-button>
           </div>
         </div>
@@ -151,7 +155,34 @@ async function editcluster(id) {
     console.error(error);
   }
 }
-
+function unbindcluster(id){
+  const url = `https://saltwood.top:9393/93AtHome/dashboard/user/unbindCluster`;
+  try {
+    ElMessageBox.confirm(
+      '此操作不可逆,是否继续?',
+      'Warning',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }
+  )
+      .then(async () => {
+        await axios.post(url,{
+          clusterId:id
+        })
+        ElMessage({
+          type: 'success',
+          message: '解绑成功',
+      })
+    })
+  } catch (error) {
+      ElMessage({
+        type: 'error',
+        message: '解绑失败:'+error,
+  })
+  }
+}
 function showEditDialog(id) {
   clusterIdToEdit.value = id;
   dialogVisible.value = true;
