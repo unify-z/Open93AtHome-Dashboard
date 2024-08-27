@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { ElTable, ElTableColumn,ElMessage } from 'element-plus';
+import { ElTable, ElTableColumn, ElMessage } from 'element-plus';
 import axios from 'axios';
 function formatCommas(num) {
   return num.toLocaleString();
@@ -45,7 +45,7 @@ async function fetchData() {
   try {
     const response = await axios.get('https://saltwood.top:9393/93AtHome/rank');
     const data = response.data;;
-    
+
     tableData.value = data.map((item, index) => {
       let hits = '0';
       let traffic = '0';
@@ -85,9 +85,9 @@ async function fetchData() {
   } catch (error) {
     console.error('Failed to fetch data:', error);
     ElMessage({
-      message: '拉取数据失败：'+ error,
+      message: '拉取数据失败：' + error,
       type: 'error'
-  });
+    });
   }
 }
 
@@ -98,15 +98,15 @@ onMounted(() => {
 
 <style scoped>
 .table-container {
-  width: 80%; 
-  margin: 20px auto; 
-  background-color: #fff; 
-  border-radius: 8px; 
+  width: 80%;
+  margin: 20px auto;
+  background-color: #fff;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.table-container{
-  background-color: #333!important;
-  border-color:#333!important 
-}
 
+.table-container {
+  background-color: #333 !important;
+  border-color: #333 !important
+}
 </style>
