@@ -28,7 +28,10 @@
         <!-- 登录失败 -->
         <div v-else>
           <h2 class="mb-5">登录失败</h2>
-          <p>服务器爆啦！</p>
+          <p>
+            服务器爆啦！<br>
+            {{ failurerea.value }}
+          </p>
         </div>
       </el-card>
     </el-main>
