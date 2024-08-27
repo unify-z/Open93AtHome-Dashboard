@@ -171,6 +171,7 @@ function unbindcluster(id){
         await axios.post(url,{
           clusterId:id
         })
+        fetchClusters()
         ElMessage({
           type: 'success',
           message: '解绑成功',
