@@ -20,7 +20,7 @@
             </div>
             <div class="card-text">
               Endpoint<br/>
-              {{ cluster.endPoint }} 
+              {{ cluster.endPoint || 'null'}} 
             </div>
             <div class="card-text">
               上行带宽<br/>
@@ -28,10 +28,10 @@
             </div>
             <div class="card-text">
               创建日期<br/>
-              {{ cluster.createdAt }}
+              {{ cluster.createdAt || 'null' }}
             </div>
             <div class="card-button">
-              <el-button>
+              <el-button @click="showcluster(cluster.clusterId)">
                 <el-icon style="margin-left: auto;"><InfoFilled /></el-icon>
                 查看节点详细
               </el-button>
@@ -94,6 +94,37 @@ function getCookie(name) {
   }
   
   return null;
+}
+async function showcluster(id) {
+  const url = `https://saltwood.top:9393/93AtHome/dashboard/user/clusters?clusterId=${id}`
+  const response = await axios.get(url,{
+    withCredentials: true
+  });
+  const resp = response.data;
+  console.log(resp);
+  
+
+  ElMessageBox.alert(`
+节点名称: ${resp.clusterName || 'null'}<br>
+ID: ${resp.clusterId}<br>
+Endpoint: ${resp.Endpoint || 'null'}<br>
+Port: ${resp.port || 'null'}<br>
+节点带宽: ${resp.bandwidth || 'null'}<br>
+实际测量带宽: ${resp.measureBandwidth || 'null'}<br>
+所有者: ${resp.owner || 'null'}<br>
+赞助商: ${resp.sponsor || 'null'}<br>
+赞助商网址: ${resp.sponsorUrl || 'null'}<br>
+创建日期: ${resp.createdAt || 'null'}<br>
+状态: ${resp.isOnline ? '启用' : '离线'}<br>
+离线原因: ${resp.downreason}<br>
+请求数: ${resp.hits}<br>
+流量: ${resp.traffic}<br>
+待处理请求数: ${resp.pendingHits}<br>
+待处理流量: ${resp.pendingTraffic}<br>
+`, '节点详细信息', {
+    dangerouslyUseHTMLString: true,
+    confirmButtonText: '确定',
+});
 }
 
 async function editcluster(id) {
