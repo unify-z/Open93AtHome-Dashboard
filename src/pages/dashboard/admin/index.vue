@@ -34,15 +34,16 @@ const bandwidth = ref('');
 async function createCluster(){
     const url = `https://saltwood.top:9393/93AtHome/super/cluster/create`
     try {
-    resp = await axios.post(url, {
-      clusterName: clusterName.value,
-      bandwidth: bandwidth.value,
+        const response = await axios.post(url, {
+        clusterName: clusterName.value,
+        bandwidth: bandwidth.value,
     }, {
-      withCredentials: true,
-    }).data;
-
-    ElMessageBox.alert(`节点创建成功,ClusterId=${resp.clusterId},ClusterSecret=${resp.clusterSecret}`);
-    dialogVisible.value = false;
+        withCredentials: true,
+        });
+        const resp = response.data;
+        console.log(resp)
+        ElMessageBox.alert(`节点创建成功,ClusterId=${resp.clusterId},ClusterSecret=${resp.clusterSecret}`, '提示');
+        dialogVisible.value = false;
   } catch (error) {
     ElMessage.error('节点创建失败: ' + error);
     console.error(error);

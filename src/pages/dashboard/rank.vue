@@ -9,9 +9,14 @@
       <el-table-column prop="clusterName" label="节点名称" />
       <el-table-column prop="hits" label="节点请求数" />
       <el-table-column prop="traffic" label="当日流量" />
-      <el-table-column prop="ownerName" label="所有者">
+      <el-table-column prop="ownerName" label="所有者" />
+      <el-table-column prop="sponsor" label="赞助商">
+        <template v-slot="{ row }">
+          <a :href="row.sponsorUrl" target="_blank">{{ row.sponsor }}</a>
+        </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" />
+      <el-table-column prop="isBanned" label="封禁状态" />
     </el-table>
   </div>
 </template>
@@ -79,6 +84,9 @@ async function fetchData() {
         pendingTraffic: item.pendingTraffic || 0,
         pendingHits: item.pendingHits || 0,
         status,
+        isBanned: item.isBanned || 'false',
+        sponsor: item.sponsor || 'null',
+        sponsorUrl: item.sponsorUrl || 'null',
         ownerName: item.ownerName || 'null'
       };
     });
