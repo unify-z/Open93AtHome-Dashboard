@@ -34,12 +34,12 @@ const bandwidth = ref('');
 async function createCluster(){
     const url = `https://saltwood.top:9393/93AtHome/super/cluster/create`
     try {
-    await axios.post(url, {
+    resp = await axios.post(url, {
       clusterName: clusterName.value,
       bandwidth: bandwidth.value,
     }, {
       withCredentials: true,
-    });
+    }).data;
 
     ElMessageBox.alert(`节点创建成功,ClusterId=${resp.clusterId},ClusterSecret=${resp.clusterSecret}`);
     dialogVisible.value = false;
