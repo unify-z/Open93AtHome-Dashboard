@@ -41,9 +41,8 @@ async function createCluster(){
       withCredentials: true,
     });
 
-    ElMessage.success('节点创建成功');
+    ElMessageBox.alert(`节点创建成功,ClusterId=${resp.clusterId},ClusterSecret=${resp.clusterSecret}`);
     dialogVisible.value = false;
-    fetchClusters();
   } catch (error) {
     ElMessage.error('节点创建失败: ' + error);
     console.error(error);
