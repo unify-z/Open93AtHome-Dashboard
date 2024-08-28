@@ -16,7 +16,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" />
-      <el-table-column prop="isBanned" label="封禁状态" />
     </el-table>
   </div>
 </template>
@@ -84,7 +83,6 @@ async function fetchData() {
         pendingTraffic: item.pendingTraffic || 0,
         pendingHits: item.pendingHits || 0,
         status,
-        isBanned: item.isBanned || 'false',
         sponsor: item.sponsor || 'null',
         sponsorUrl: item.sponsorUrl || 'null',
         ownerName: item.ownerName || 'null'
