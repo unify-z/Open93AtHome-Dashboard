@@ -8,6 +8,7 @@
       <el-menu-item index="1" @click="router.push('/dashboard')">主页</el-menu-item>
       <el-menu-item index="2" @click="router.push('/dashboard/rank')">排行榜</el-menu-item>
       <el-menu-item index="3" @click="router.push('/dashboard/myclusters')">我的节点</el-menu-item>
+      <el-menu-item  index="4" v-if="isAdmin.valueOf" @click="router.push('/dashboard/admin')">管理页</el-menu-item>
       <el-menu-item>
         <el-button @click="switchThemes()">
           <el-icon>
@@ -16,7 +17,7 @@
         </el-button>
       </el-menu-item>
       <el-menu-item>
-        <el-button v-if="!isTokenPresent()" @click="router.push('/auth/login')" type="primary">登录</el-button>
+        <el-button v-if="!isTokenPresent()" @click="router.push('/dashboard/auth/login')" type="primary">登录</el-button>
         <div v-else style="display: flex; align-items: center;">
           <img :src="userInfo.avatar_url" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
           <span style="margin-left: 8px;">{{ userInfo.login }}</span>
@@ -44,10 +45,10 @@ const isTokenPresent = (): boolean => {
   const token = Cookies.get('token');
   return !!token;
 }
-
+const isAdmin = ref(false)
 const userInfo = ref({
   avatar_url: '',
-  login: ''
+  login: '',
 })
 
 const getuserinfo = async () => {
@@ -56,6 +57,14 @@ const getuserinfo = async () => {
       withCredentials: true,
     });
     userInfo.value = response.data;
+    if (response.data.is_super_admin){
+      isAdmin.value = true
+    }else{
+      isAdmin.value = false
+    }
+    console.log(isAdmin.value)
+
+
   } catch (error) {
     console.error('Error:', error);
   }

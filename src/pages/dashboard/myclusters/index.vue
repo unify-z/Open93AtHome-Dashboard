@@ -124,6 +124,7 @@ Port: ${resp.port || 'null'}<br>
 赞助商网址: ${resp.sponsorUrl || 'null'}<br>
 创建日期: ${resp.createdAt || 'null'}<br>
 状态: ${resp.isOnline ? '启用' : '离线'}<br>
+封禁状态: ${resp.isBanned ? '已封禁' : '未封禁'}<br>
 离线原因: ${resp.downreason}<br>
 请求数: ${resp.hits}<br>
 流量: ${resp.traffic}<br>
@@ -160,7 +161,7 @@ function unbindcluster(id){
   try {
     ElMessageBox.confirm(
       '此操作不可逆,是否继续?',
-      'Warning',
+      '警告',
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
