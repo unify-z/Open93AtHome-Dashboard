@@ -42,7 +42,10 @@ async function createCluster(){
         });
         const resp = response.data;
         console.log(resp)
-        ElMessageBox.alert(`节点创建成功,ClusterId=${resp.clusterId},ClusterSecret=${resp.clusterSecret}`, '提示');
+        ElMessageBox.alert(
+            `节点创建成功, ClusterId=${resp.clusterId}, ClusterSecret=${resp.clusterSecret}`,
+            '提示'
+          );
         dialogVisible.value = false;
   } catch (error) {
     ElMessage.error('节点创建失败: ' + error);
