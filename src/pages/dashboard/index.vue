@@ -1,7 +1,31 @@
 <template>
   <el-row :gutter="20">
+    <el-col :span="8">
+      <el-card class="card-margin" style="margin-top: 20px;">
+        <div slot="header" class="clearfix">
+          <span>在线节点数</span>
+        </div>
+        <div>{{ data.onlines }}</div>
+      </el-card>
+    </el-col>
+    <el-col :span="8">
+      <el-card class="card-margin" style="margin-top: 20px;">
+        <div slot="header" class="clearfix">
+          <span>今日请求数</span>
+        </div>
+        <div>{{ formatCommas(data.today.hits) }}</div>
+      </el-card>
+    </el-col>
+    <el-col :span="8">
+      <el-card class="card-margin" style="margin-top: 20px;">
+        <div slot="header" class="clearfix">
+          <span>今日流量</span>
+        </div>
+        <div>{{ formatUnits(data.today.bytes) }}</div>
+      </el-card>
+    </el-col>
     <el-col :span="12">
-      <el-card style="margin-top: 20px;">
+      <el-card style="margin-top: 10px;">
         <el-row>
           <el-col :span="24">
             <div ref="hitsChart" style="width: 100%; height: 250px;"></div>
@@ -10,7 +34,7 @@
       </el-card>
     </el-col>
     <el-col :span="12">
-      <el-card style="margin-top: 20px;">
+      <el-card style="margin-top: 10px;">
         <el-row>
           <el-col :span="24">
             <div ref="bytesChart" style="width: 100%; height: 250px;"></div>
@@ -26,8 +50,16 @@ import axios from 'axios';
 import * as echarts from 'echarts';
 import { useDark, useToggle } from '@vueuse/core';
 import { ElMessage } from 'element-plus';
+const data = ref({
+    "dailyHits": [],
+    "dailyBytes": [],
+    "today": {
+        "hits": 0,
+        "bytes": 0
+    },
+    "onlines": 0
+  });
 
-// 定义格式化函数
 function formatCommas(num) {
   return num.toLocaleString();
 }
@@ -62,7 +94,7 @@ const initHitsChart = (dailyHits) => {
         }
       },
       title: { text: '日请求数', textStyle: { color: isDarkMode.value ? '#ffffff' : '#000000' }},
-      xAxis: { type: 'category', data: Array.from({ length: dailyHits.length }, (_, i) => `Day ${i + 1}`) },
+      xAxis: { type: 'category', data: Array.from({ length: dailyHits.length }, (_, i) => `${i + 1} 号`) },
       yAxis: { type: 'value' },
       series: [{ name: '日请求数', type: 'line', data: dailyHits }],
     };
@@ -81,7 +113,7 @@ const initBytesChart = (dailyBytes) => {
         }
       },
       title: { text: '日流量', textStyle: { color: isDarkMode.value ? '#ffffff' : '#000000' }},
-      xAxis: { type: 'category', data: Array.from({ length: dailyBytes.length }, (_, i) => `Day ${i + 1}`) },
+      xAxis: { type: 'category', data: Array.from({ length: dailyBytes.length }, (_, i) => `${i + 1} 号`) },
       yAxis: {
         type: 'value',
         axisLabel: {
@@ -97,21 +129,19 @@ const initBytesChart = (dailyBytes) => {
 };
 
 const fetchData = async () => {
-  try {
+  try{
     const response = await axios.get('https://saltwood.top:9393/93AtHome/centerStatistics');
-    const data = response.data;
-    initHitsChart(data.dailyHits);
-    initBytesChart(data.dailyBytes);
-  } catch (error) {
-    console.error('Failed to fetch data:', error);
-    ElMessage({
-      message: '拉取数据失败：' + error,
-      type: 'error'
-    });
+    data.value = response.data;
+    initHitsChart(data.value.dailyHits);
+    initBytesChart(data.value.dailyBytes);
+  }catch(error){
+    ElMessage("拉取数据失败："+error)
+    console.error('Error:', error);
   }
 };
 
 onMounted(() => {
   fetchData();
+  console.log(data)
 });
 </script>
