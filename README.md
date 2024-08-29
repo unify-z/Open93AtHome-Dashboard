@@ -1,5 +1,6 @@
 # Open93AtHome-Dashboard
 
+
 ![93Home-Dash](https://socialify.git.ci/unify-z/Open93AtHome-Dashboard/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
 
 本项目是 93@Home 的 DashBoard 基于 Vue + Element-plus
@@ -15,12 +16,12 @@
 1. 克隆此仓库到本地
 
 ```bash
-git clone https://github.com/Mxmilu666/93Home-Dash.git
+git clone https://github.com/unify-z/Open93AtHome-Dashboard.git
 ```
 
 2. 进入项目目录并安装依赖：
 ```bash
-cd 93Home-Dash
+cd Open93AtHome-Dashboard
 npm install
 ```
 
@@ -42,7 +43,7 @@ npm run build
 >
 > 希望 [@so1ve](https://github.com/so1ve)和[@FloatSheep](https://github.com/FloatSheep) 保佑我的代码没有任何 Bug ，没有任何报错呜呜呜
 
-## 其他
+## 😋 其他
 
 ### 推荐的 IDE 配置
 
