@@ -8,7 +8,7 @@
       <el-menu-item index="1" @click="router.push('/dashboard')">主页</el-menu-item>
       <el-menu-item index="2" @click="router.push('/dashboard/rank')">排行榜</el-menu-item>
       <el-menu-item index="3" @click="router.push('/dashboard/myclusters')">我的节点</el-menu-item>
-      <el-menu-item  index="4" v-if="isAdmin.valueOf" @click="router.push('/dashboard/admin')">管理页</el-menu-item>
+      <el-menu-item  index="4" v-if="isAdmin" @click="router.push('/dashboard/admin')">管理页</el-menu-item>
       <el-menu-item>
         <el-button @click="switchThemes()">
           <el-icon>
@@ -41,16 +41,20 @@ import Cookies from 'js-cookie'
 const activeIndex = ref('1')
 const router = useRouter()
 
-const isTokenPresent = (): boolean => {
-  const token = Cookies.get('token');
-  return !!token;
-}
-const isAdmin = ref(false)
+
+let isAdmin = ref(false)
 const userInfo = ref({
   avatar_url: '',
   login: '',
 })
-
+const isTokenPresent = (): boolean => {
+  const token = Cookies.get('token');
+  if (!token){
+    isAdmin.value = false
+    console.log(isAdmin.value)
+  }
+  return !!token;
+}
 const getuserinfo = async () => {
   try {
     const response = await axios.get('https://saltwood.top:9393/93AtHome/dashboard/user/profile', {
