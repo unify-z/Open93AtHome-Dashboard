@@ -90,7 +90,7 @@ const initHitsChart = (dailyHits) => {
       tooltip: {
         trigger: 'axis',
         formatter: function (params) {
-          return params[0].name + '<br/>' + params[0].seriesName + ': ' + formatUnits(params[0].value);
+          return params[0].name + '<br/>' + params[0].seriesName + ': ' + formatCommas(params[0].value);
         }
       },
       title: { text: '日请求数', textStyle: { color: isDarkMode.value ? '#ffffff' : '#000000' }},
