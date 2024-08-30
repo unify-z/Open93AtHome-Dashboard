@@ -37,6 +37,6 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "open93athome"
+          project: "open93athom-33"
           entrypoint: "https://deno.land/std@0.217.0/http/file_server.ts"
           root: "dist"
