@@ -1,9 +1,18 @@
 <template>
     <div>
-        <el-card style="margin-top:20px; display: grid; place-items: center;">
+        <el-card style="margin-top:20px; display: grid">
             <el-button type="primary" @click="showDialog()" style="margin: 0 10px;">创建节点</el-button>
-            <el-button type="primary" @click="banCluster()" style="margin: 0 10px;">封禁节点</el-button>
-            <el-button type="primary" @click="unbanCluster()" style="margin: 0 10px;">解封节点</el-button>
+            <el-table :data="clusterlist" style="width: 100%,margin-top:10px">
+              <el-table-column prop="id" label="ClusterId" width="180" />
+              <el-table-column prop="name" label="节点名称" width="180" />
+              <el-table-column prop="bandwidth" label="节点带宽" />
+              <el-table-column prop="isBanned" label="封禁状态" />
+              <el-table-column label="操作">
+                  <el-button v-if="clusterlist.iaBanned === 1" type="primary" @click="unbanCluster(cluster.id)">解封</el-button>
+                  <el-button v-if="clusterlist.iaBanned === 0" type="primary" @click="banCluster(cluster.id)">封禁</el-button>
+                  <el-button type="danger" @click="removecluster(cluster.id)">删除</el-button>
+              </el-table-column>
+            </el-table>
         </el-card>
         <el-dialog v-model="dialogVisible" title="创建节点" width="50%">
             <el-form label-position="top" label-width="100px">
@@ -25,12 +34,13 @@
 </template>
 
 <script setup lang="js">
-import { ref } from 'vue';
+import { ref , onMounted} from 'vue';
 import { ElMessageBox, ElMessage, ElButton, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus';
 import axios from 'axios';
 const dialogVisible = ref(false);
 const clusterName = ref('');
 const bandwidth = ref('');
+const clusterlist = ref([]);
 async function createCluster(){
     const url = `https://saltwood.top:9393/93AtHome/super/cluster/create`
     try {
@@ -52,13 +62,7 @@ async function createCluster(){
     console.error(error);
   }
 }
-function banCluster(){
-    ElMessageBox.prompt('输入要封禁的节点Id', '提示', {
-    confirmButtonText: '提交',
-    cancelButtonText: '取消',
-    placeholder: 'ClusterId'
-  })
-    .then(async ({ value }) => {
+async function banCluster(){
         const url = `https://saltwood.top:9393/93AtHome/super/cluster/ban`
         try{
             await axios.post(url, {
@@ -72,17 +76,10 @@ function banCluster(){
             ElMessage.error('节点封禁失败: ' + error);
             console.log(error)
         }
-      
-    })
+    
 }
-function unbanCluster(){
-    ElMessageBox.prompt('输入要解封的节点Id', '提示', {
-    confirmButtonText: '提交',
-    cancelButtonText: '取消',
-    placeholder: 'ClusterId'
-  })
-    .then(async ({ value }) => {
-        const url = `https://saltwood.top:9393/93AtHome/super/cluster/ban`
+async function unbanCluster(id){
+      const url = `https://saltwood.top:9393/93AtHome/super/cluster/ban`
         try{
             await axios.post(url, {
               ban: false,
@@ -95,11 +92,45 @@ function unbanCluster(){
             ElMessage.error('节点封禁失败: ' + error);
             console.log(error)
         }
-      
+          
+}
+async function removecluster(id){
+  ElMessageBox.confirm(
+    '节点将会被删除，确定?',
+    '警告',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+      try{
+        const url = `https://saltwood.top:9393/93AtHome/super/cluster/remove`
+        await axios.post(url, {
+        clusterId: id,
+    }, {
+        withCredentials: true,
+    });
+        ElMessage.success('节点删除成功');
+        fetchclusterlist();
+      }catch(error){
+        ElMessage.error('节点删除失败: ' + error);
+  }
     })
+
+}
+async function fetchclusterlist(){
+  resp = await axios.get(`https://saltwood.top:9393/93AtHome/list_clusters`, {
+    withCredentials: true,
+  })
+  clusterlist.value = resp.data
 }
 function showDialog() {
   dialogVisible.value = true;
 }
+onMounted(() => {
+  fetchclusterlist();
+});
 
 </script>
