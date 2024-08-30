@@ -38,100 +38,88 @@
   </el-container>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { ElMessage } from 'element-plus';
 
-export default {
-  name: 'Login',
-  setup() {
-    const loading = ref(false);
-    const success = ref(false);
-    const failure = ref(false);
-    const username = ref('');
-    const failurerea = ref('');
+const loading = ref(false);
+const success = ref(false);
+const failure = ref(false);
+const username = ref('');
+const failurerea = ref('');
 
-    const goBack = () => {
-      window.history.back();
-    };
+const goBack = () => {
+  history.back();
+};
 
-    const redirectToHome = () => {
-      window.location.href = '/dashboard';
-    };
+const redirectToHome = () => {
+  location.href = '/dashboard';
+};
 
-    const getcode = async () => {
-      try {
-        loading.value = true;
-        const response = await axios.get('https://saltwood.top:9393/93AtHome/dashboard/oauth_id');
-        const redirect_uri = window.location.href;
-        const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${response.data}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
-        window.location.href = redirectUrl;
-      } catch (error) {
-        loading.value = false;
-        console.error("Failed to get client_id:", error);
-      }
-    };
+const getcode = async () => {
+  try {
+    loading.value = true;
+    const response = await axios.get('https://saltwood.top:9393/93AtHome/dashboard/oauth_id');
+    const redirect_uri = location.href;
+    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${response.data}&redirect_uri=${encodeURIComponent(redirect_uri)}`;
+    location.href = redirectUrl;
+  } catch (error) {
+    loading.value = false;
+    console.error("Failed to get client_id:", error);
+  }
+};
 
-    const callback = async (code) => {
-      try {
-        const Url = `https://saltwood.top:9393/93AtHome/dashboard/user/oauth`;
-        ElMessage("正在登录，别急");
-        const response = await axios.get(Url, {
-          params: {
-            code: code,
-          },
-        });
-
-        if (response.status === 200) {
-          success.value = true;
-          username.value = response.data.username;
-          setTimeout(() => {
-            redirectToHome();
-          }, 3000);
-        } else {
-          failure.value = true;
-          console.log("Login failed with status:", response.status);
-          failurerea.value = response.data.error;
-        }
-      } catch (error) {
-        failure.value = true;
-        if (error.response && error.response.status === 500) {
-          failurerea.value = error.response.data.error;
-        } else {
-          console.error("Login failed:", error);
-          failurerea.value = error;
-        }
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    onMounted(() => {
-      if (Cookies.get('token')) {
-        redirectToHome();
-      } else if (new URLSearchParams(window.location.search).get('code')) {
-        loading.value = true;
-        callback(new URLSearchParams(window.location.search).get('code')).finally(() => {
-          loading.value = false;
-        });
-      }
+const callback = async (code) => {
+  try {
+    const Url = `https://saltwood.top:9393/93AtHome/dashboard/user/oauth`;
+    ElMessage("正在登录，别急");
+    const response = await axios.get(Url, {
+      params: {
+        code,
+      },
     });
 
-    return {
-      loading,
-      success,
-      failure,
-      username,
-      failurerea,
-      goBack,
-      getcode,
-      callback,
-      redirectToHome,
-    };
-  },
+    if (response.status === 200) {
+      success.value = true;
+      username.value = response.data.username;
+      setTimeout(redirectToHome, 3000);
+    } else {
+      failure.value = true;
+      console.log("Login failed with status:", response.status);
+      failurerea.value = response.data.error;
+    }
+  } catch (error) {
+    failure.value = true;
+    if (error.response && error.response.status === 500) {
+      failurerea.value = error.response.data.error;
+    } else {
+      console.error("Login failed:", error);
+      failurerea.value = error;
+    }
+  } finally {
+    loading.value = false;
+  }
 };
+
+onMounted(() => {
+  if (Cookies.get('token')) {
+    redirectToHome();
+  } else if (new URLSearchParams(location.search).get('code')) {
+    loading.value = true;
+    callback(new URLSearchParams(location.search).get('code')).finally(() => {
+      loading.value = false;
+    });
+  }
+});
+
+defineExpose({
+  goBack,
+  getcode,
+  callback,
+  redirectToHome,
+});
 </script>
 
 <style scoped>
