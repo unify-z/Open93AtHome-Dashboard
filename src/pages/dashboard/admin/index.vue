@@ -72,6 +72,7 @@ async function banCluster(){
               withCredentials: true,
             });
             ElMessage.success('节点封禁成功');
+            fetchclusterlist()
         }catch(error){
             ElMessage.error('节点封禁失败: ' + error);
             console.log(error)
@@ -88,6 +89,7 @@ async function unbanCluster(id){
               withCredentials: true,
             });
             ElMessage.success('节点解封成功');
+            fetchclusterlist()
         }catch(error){
             ElMessage.error('节点封禁失败: ' + error);
             console.log(error)
